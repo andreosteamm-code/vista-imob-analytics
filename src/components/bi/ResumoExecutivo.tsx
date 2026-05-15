@@ -23,13 +23,13 @@ export function ResumoExecutivo() {
 
   const k = useMemo(() => {
     const total = leads.length;
-    const ganhos = leads.filter((l) => l.status === "Ganho").length;
+    const locados = leads.filter((l) => l.status === "Locado").length;
     const perdidos = leads.filter((l) => l.status === "Perdido").length;
-    const ativos = total - ganhos - perdidos;
-    const valorGanho = leads
-      .filter((l) => l.status === "Ganho")
-      .reduce((acc, l) => acc + (Number(l.valor) || 0), 0);
-    return { total, ganhos, perdidos, ativos, valorGanho, conversao: pct(ganhos, total) };
+    const ativos = total - locados - perdidos;
+    const vgl = leads
+      .filter((l) => l.status === "Locado")
+      .reduce((acc, l) => acc + (Number(l.valor_locacao) || 0), 0);
+    return { total, locados, perdidos, ativos, vgl, conversao: pct(locados, total) };
   }, [leads]);
 
   const trend = useMemo(() => monthlyTrend(leads), [leads]);
@@ -38,20 +38,20 @@ export function ResumoExecutivo() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Kpi icon={Users} label="Total de Leads" value={fmtInt(k.total)} sub={`${k.ativos} em andamento`} />
-        <Kpi icon={Target} label="Taxa de Conversão" value={fmtPct(k.conversao)} sub={`${k.ganhos} negócios fechados`} />
+        <Kpi icon={Target} label="Taxa de Conversão" value={fmtPct(k.conversao)} sub={`${k.locados} imóveis locados`} />
         <Kpi icon={TrendingUp} label="Negócios Perdidos" value={fmtInt(k.perdidos)} sub={`${fmtPct(pct(k.perdidos, k.total))} do total`} />
         <Kpi
           icon={DollarSign}
-          label="Receita Fechada"
-          value={k.valorGanho.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}
-          sub="Soma de leads ganhos"
+          label="VGL — Valor Geral de Locação"
+          value={k.vgl.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}
+          sub="Soma dos imóveis locados"
         />
       </div>
 
       <Card className="p-6 bg-card border-border">
         <div className="flex items-baseline justify-between mb-4">
           <h2 className="text-lg font-semibold">Tendência Mensal</h2>
-          <span className="text-xs text-muted-foreground">Volume × Conversão</span>
+          <span className="text-xs text-muted-foreground">Volume × Locações</span>
         </div>
         <div className="h-80">
           {isLoading ? (
@@ -75,7 +75,7 @@ export function ResumoExecutivo() {
                   labelStyle={{ color: "oklch(0.97 0.005 250)" }}
                 />
                 <Area type="monotone" dataKey="total" stroke="oklch(0.68 0.18 250)" fill="url(#g1)" strokeWidth={2} name="Leads" />
-                <Area type="monotone" dataKey="ganhos" stroke="oklch(0.7 0.17 155)" fill="transparent" strokeWidth={2} name="Ganhos" />
+                <Area type="monotone" dataKey="locados" stroke="oklch(0.7 0.17 155)" fill="transparent" strokeWidth={2} name="Locados" />
               </AreaChart>
             </ResponsiveContainer>
           )}
