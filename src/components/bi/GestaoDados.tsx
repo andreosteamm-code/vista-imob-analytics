@@ -7,7 +7,7 @@ import { supabase, TABLE, type Lead } from "@/integrations/supabase/client";
 import { Upload, FileSpreadsheet, CheckCircle2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
-const COLS = ["consultor", "etapa", "status", "motivo_perda", "fonte", "valor", "nome_cliente", "created_at"];
+const COLS = ["consultor", "etapa", "status", "motivo_perda", "fonte", "valor_locacao", "nome_cliente", "created_at"];
 
 function normalizeRow(raw: Record<string, any>): Lead {
   const get = (...keys: string[]) => {
@@ -17,14 +17,14 @@ function normalizeRow(raw: Record<string, any>): Lead {
     }
     return null;
   };
-  const valor = get("valor", "value", "preço", "preco");
+  const valor = get("valor_locacao", "valor", "preço", "preco", "price", "aluguel");
   return {
-    consultor: get("consultor", "vendedor", "responsavel", "responsável"),
+    consultor: get("consultor", "vendedor", "responsavel", "responsável", "corretor"),
     etapa: get("etapa", "stage", "fase"),
     status: get("status", "situacao", "situação"),
     motivo_perda: get("motivo_perda", "motivo", "motivo da perda"),
     fonte: get("fonte", "origem", "source"),
-    valor: valor != null ? Number(String(valor).replace(/[^\d.,-]/g, "").replace(",", ".")) || null : null,
+    valor_locacao: valor != null ? Number(String(valor).replace(/[^\d.,-]/g, "").replace(",", ".")) || null : null,
     nome_cliente: get("nome_cliente", "cliente", "nome"),
     created_at: get("created_at", "data", "data_criacao", "data criação") || undefined,
   };
@@ -73,8 +73,8 @@ export function GestaoDados() {
         <div className="flex items-start gap-4 mb-6">
           <div className="p-3 rounded-lg bg-primary/10 text-primary"><Upload className="h-6 w-6" /></div>
           <div>
-            <h2 className="text-lg font-semibold">Importar Leads via CSV</h2>
-            <p className="text-sm text-muted-foreground mt-1">Cada linha será inserida automaticamente em <code className="text-primary">leads_imobiliarios</code>.</p>
+            <h2 className="text-lg font-semibold">Importar Leads de Locação via CSV</h2>
+            <p className="text-sm text-muted-foreground mt-1">Cada linha será inserida automaticamente em <code className="text-primary">leads_locacao</code>.</p>
           </div>
         </div>
 
@@ -118,16 +118,23 @@ export function GestaoDados() {
       <Card className="p-6 bg-card border-border">
         <h3 className="text-sm font-semibold mb-3 uppercase tracking-wider text-muted-foreground">Schema esperado</h3>
         <p className="text-sm text-muted-foreground mb-4">
-          A tabela <code className="text-primary">leads_imobiliarios</code> deve conter as colunas abaixo. Aceitamos variantes em PT-BR (consultor/vendedor, etapa/fase, fonte/origem, valor/preço, etc.).
+          A tabela <code className="text-primary">leads_locacao</code> deve conter as colunas abaixo. Aceitamos variantes em PT-BR (consultor/corretor, etapa/fase, fonte/origem, valor_locacao/preço/aluguel, etc.).
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
           {COLS.map((c) => (
             <div key={c} className="px-3 py-2 rounded bg-muted font-mono text-foreground">{c}</div>
           ))}
         </div>
-        <div className="mt-4 text-xs text-muted-foreground">
-          Valores esperados — <span className="text-foreground">etapa</span>: Oportunidade, Visita, Contrato &nbsp;·&nbsp;
-          <span className="text-foreground">status</span>: Em andamento, Ganho, Perdido
+        <div className="mt-4 text-xs text-muted-foreground space-y-1">
+          <div>
+            <span className="text-foreground font-medium">etapa</span>: Oportunidade, Atendimento, Confirmação de visita, Em visitação, Análise, Proposta, Documentação, Contrato/Vistoria, Envio de Contrato, Aguardando Assinaturas
+          </div>
+          <div>
+            <span className="text-foreground font-medium">status</span>: Em andamento, Locado, Perdido
+          </div>
+          <div>
+            <span className="text-foreground font-medium">valor_locacao</span>: valor do aluguel mensal (a coluna "Preço" do CRM é mapeada automaticamente)
+          </div>
         </div>
       </Card>
     </div>

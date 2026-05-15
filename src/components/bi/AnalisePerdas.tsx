@@ -25,7 +25,7 @@ export function AnalisePerdas() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold">Análise de Perdas</h2>
-          <p className="text-xs text-muted-foreground">Entenda onde os negócios estão sendo perdidos</p>
+          <p className="text-xs text-muted-foreground">Entenda onde as locações estão sendo perdidas</p>
         </div>
         <Select value={fonte} onValueChange={setFonte}>
           <SelectTrigger className="w-56"><SelectValue placeholder="Filtrar por fonte" /></SelectTrigger>
