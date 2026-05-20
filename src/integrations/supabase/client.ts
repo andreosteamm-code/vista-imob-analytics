@@ -31,7 +31,7 @@ export type Lead = {
   motivo_perda: string | null;
   fonte: string | null;
   valor_locacao: number | null;
-  nome_cliente?: string | null;
+  nome_negocio?: string | null;
 };
 
 export const TABLE = "leads_locacao";
