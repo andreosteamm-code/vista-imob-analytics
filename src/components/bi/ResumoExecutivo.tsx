@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useLeads } from "@/hooks/useLeads";
+import { useFilteredLeads as useLeads } from "@/hooks/useDateFilter";
 import { Card } from "@/components/ui/card";
 import { fmtInt, fmtPct, monthlyTrend, pct } from "@/lib/bi-utils";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
