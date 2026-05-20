@@ -24,6 +24,7 @@ export type EtapaLocacao = (typeof FUNIL_ETAPAS)[number];
 
 export type Lead = {
   id?: string;
+  id_crm: string;
   created_at?: string;
   consultor: string | null;
   etapa: EtapaLocacao | string | null;
