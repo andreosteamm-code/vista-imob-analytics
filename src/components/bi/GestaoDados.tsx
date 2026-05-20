@@ -113,8 +113,14 @@ function normalizeRow(raw: Record<string, any>): Lead | null {
   const fonte = find("Fonte", "fonte", "origem", "source");
   const valor = find("Preço", "Preco", "valor_locacao", "valor", "price", "aluguel");
   const nome = find("Nome do negócio", "Nome do negocio", "nome_negocio", "negocio", "nome");
+  const idRaw = find("ID", "Id", "id", "id_crm");
+  const idCrm = idRaw != null ? String(idRaw).trim() : "";
+
+  // Sem ID → linha ignorada (id_crm é NOT NULL e chave de conflito do upsert)
+  if (!idCrm) return null;
 
   const lead: Lead = {
+    id_crm: idCrm,
     consultor: consultor ? String(consultor) : null,
     etapa,
     status,
@@ -124,9 +130,6 @@ function normalizeRow(raw: Record<string, any>): Lead | null {
     nome_negocio: nome ? String(nome) : null,
     created_at: oportunidadeISO ?? undefined,
   };
-
-  // Skip totally empty rows
-  if (!lead.consultor && !lead.etapa && !lead.fonte && !lead.nome_negocio && !lead.created_at) return null;
   return lead;
 }
 
@@ -156,7 +159,7 @@ export function GestaoDados() {
         let lastErr: string | undefined;
         for (let i = 0; i < rows.length; i += 500) {
           const batch = rows.slice(i, i + 500);
-          const { error } = await supabase.from(TABLE).insert(batch);
+          const { error } = await supabase.from(TABLE).upsert(batch, { onConflict: "id_crm" });
           if (error) { lastErr = error.message; break; }
           ok += batch.length;
         }
