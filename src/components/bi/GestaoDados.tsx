@@ -112,7 +112,7 @@ function normalizeRow(raw: Record<string, any>): Lead | null {
   const motivo = find("Motivo de Descarte", "motivo_perda", "motivo", "motivo da perda");
   const fonte = find("Fonte", "fonte", "origem", "source");
   const valor = find("Preço", "Preco", "valor_locacao", "valor", "price", "aluguel");
-  const nome = find("Nome do negócio", "Nome do negocio", "nome_cliente", "cliente", "nome");
+  const nome = find("Nome do negócio", "Nome do negocio", "nome_negocio", "negocio", "nome");
 
   const lead: Lead = {
     consultor: consultor ? String(consultor) : null,
@@ -121,12 +121,12 @@ function normalizeRow(raw: Record<string, any>): Lead | null {
     motivo_perda: motivo ? String(motivo) : null,
     fonte: fonte ? String(fonte) : null,
     valor_locacao: parseMoney(valor),
-    nome_cliente: nome ? String(nome) : null,
+    nome_negocio: nome ? String(nome) : null,
     created_at: oportunidadeISO ?? undefined,
   };
 
   // Skip totally empty rows
-  if (!lead.consultor && !lead.etapa && !lead.fonte && !lead.nome_cliente && !lead.created_at) return null;
+  if (!lead.consultor && !lead.etapa && !lead.fonte && !lead.nome_negocio && !lead.created_at) return null;
   return lead;
 }
 
@@ -235,7 +235,7 @@ export function GestaoDados() {
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
           {[
-            ["Nome do negócio", "nome_cliente"],
+            ["Nome do negócio", "nome_negocio"],
             ["Corretor responsável / Responsável", "consultor"],
             ["Fonte", "fonte"],
             ["Fase", "etapa (atual)"],
