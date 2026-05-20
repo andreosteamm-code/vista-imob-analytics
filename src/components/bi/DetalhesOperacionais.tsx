@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useLeads } from "@/hooks/useLeads";
+import { useFilteredLeads as useLeads } from "@/hooks/useDateFilter";
 import { Card } from "@/components/ui/card";
 import { byConsultor, fmtInt, fmtPct, funnelCounts, pct } from "@/lib/bi-utils";
 import { FUNIL_ETAPAS } from "@/integrations/supabase/client";
