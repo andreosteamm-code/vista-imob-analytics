@@ -113,6 +113,10 @@ function normalizeRow(raw: Record<string, any>): Lead | null {
   const fonte = find("Fonte", "fonte", "origem", "source");
   const valor = find("Preço", "Preco", "valor_locacao", "valor", "price", "aluguel");
   const nome = find("Nome do negócio", "Nome do negocio", "nome_negocio", "negocio", "nome");
+  const contato = find("Contato", "contato", "Nome do contato", "cliente");
+  const telefone = find("Telefone", "telefone", "Celular", "celular", "phone");
+  const criadoRaw = find("Criado", "criado", "Data de criação", "Data criacao", "data_criacao");
+  const dataCriacao = parseDate(criadoRaw);
   const idRaw = find("ID", "Id", "id", "id_crm");
   const idCrm = idRaw != null ? String(idRaw).trim() : "";
 
@@ -128,7 +132,10 @@ function normalizeRow(raw: Record<string, any>): Lead | null {
     fonte: fonte ? String(fonte) : null,
     valor_locacao: parseMoney(valor),
     nome_negocio: nome ? String(nome) : null,
-    created_at: oportunidadeISO ?? undefined,
+    contato: contato ? String(contato) : null,
+    telefone: telefone ? String(telefone) : null,
+    data_criacao: dataCriacao,
+    created_at: dataCriacao ?? oportunidadeISO ?? undefined,
   };
   return lead;
 }
