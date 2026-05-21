@@ -4,6 +4,7 @@ import { ResumoExecutivo } from "@/components/bi/ResumoExecutivo";
 import { DetalhesOperacionais } from "@/components/bi/DetalhesOperacionais";
 import { AnalisePerdas } from "@/components/bi/AnalisePerdas";
 import { GestaoDados } from "@/components/bi/GestaoDados";
+import { BaseClientes } from "@/components/bi/BaseClientes";
 import { Toaster } from "@/components/ui/sonner";
 import { Activity } from "lucide-react";
 import { DateFilterProvider } from "@/hooks/useDateFilter";
