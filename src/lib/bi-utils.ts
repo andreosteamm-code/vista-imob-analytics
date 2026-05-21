@@ -56,22 +56,47 @@ export function funnelCounts(leads: Lead[]) {
   return counts;
 }
 
+export const ETAPAS_CONSULTOR = [
+  "Confirmação de visita",
+  "Em visitação",
+  "Análise",
+  "Proposta",
+  "Documentação",
+  "Contrato/Vistoria",
+] as const;
+
 export function byConsultor(leads: Lead[]) {
-  const map = new Map<string, { total: number; locados: number; perdidos: number; visitas: number; contratos: number }>();
+  const map = new Map<string, {
+    total: number;
+    locados: number;
+    perdidos: number;
+    etapas: Record<string, number>;
+  }>();
   leads.forEach((l) => {
     const k = l.consultor || "—";
-    const cur = map.get(k) ?? { total: 0, locados: 0, perdidos: 0, visitas: 0, contratos: 0 };
+    const cur = map.get(k) ?? {
+      total: 0,
+      locados: 0,
+      perdidos: 0,
+      etapas: Object.fromEntries(ETAPAS_CONSULTOR.map((e) => [e, 0])),
+    };
     cur.total++;
     if (l.status === "Locado") cur.locados++;
     if (l.status === "Perdido") cur.perdidos++;
     const r = RANK[l.etapa ?? ""] ?? 0;
-    if (r >= RANK["Em visitação"]) cur.visitas++;
-    if (r >= RANK["Contrato/Vistoria"]) cur.contratos++;
+    ETAPAS_CONSULTOR.forEach((stage) => {
+      if (r >= RANK[stage]) cur.etapas[stage]++;
+    });
     map.set(k, cur);
   });
   return [...map.entries()].map(([consultor, v]) => ({
     consultor,
-    ...v,
+    total: v.total,
+    locados: v.locados,
+    perdidos: v.perdidos,
+    etapas: v.etapas,
+    visitas: v.etapas["Em visitação"],
+    contratos: v.etapas["Contrato/Vistoria"],
     conversao: pct(v.locados, v.total),
   })).sort((a, b) => b.total - a.total);
 }
