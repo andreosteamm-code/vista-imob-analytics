@@ -40,6 +40,7 @@ function BIDashboard() {
               <TabsList className="bg-card border border-border h-11 p-1">
                 <TabsTrigger value="resumo" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Resumo Executivo</TabsTrigger>
                 <TabsTrigger value="ops" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Detalhes Operacionais</TabsTrigger>
+                <TabsTrigger value="clientes" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Base de Clientes</TabsTrigger>
                 <TabsTrigger value="perdas" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Análise de Perdas</TabsTrigger>
                 <TabsTrigger value="dados" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Gestão de Dados</TabsTrigger>
               </TabsList>
@@ -48,6 +49,7 @@ function BIDashboard() {
 
             <TabsContent value="resumo"><ResumoExecutivo /></TabsContent>
             <TabsContent value="ops"><DetalhesOperacionais /></TabsContent>
+            <TabsContent value="clientes"><BaseClientes /></TabsContent>
             <TabsContent value="perdas"><AnalisePerdas /></TabsContent>
             <TabsContent value="dados"><GestaoDados /></TabsContent>
           </Tabs>
