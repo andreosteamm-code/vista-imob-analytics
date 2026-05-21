@@ -113,6 +113,10 @@ function normalizeRow(raw: Record<string, any>): Lead | null {
   const fonte = find("Fonte", "fonte", "origem", "source");
   const valor = find("Preço", "Preco", "valor_locacao", "valor", "price", "aluguel");
   const nome = find("Nome do negócio", "Nome do negocio", "nome_negocio", "negocio", "nome");
+  const contato = find("Contato", "contato", "Nome do contato", "cliente");
+  const telefone = find("Telefone", "telefone", "Celular", "celular", "phone");
+  const criadoRaw = find("Criado", "criado", "Data de criação", "Data criacao", "data_criacao");
+  const dataCriacao = parseDate(criadoRaw);
   const idRaw = find("ID", "Id", "id", "id_crm");
   const idCrm = idRaw != null ? String(idRaw).trim() : "";
 
@@ -128,7 +132,10 @@ function normalizeRow(raw: Record<string, any>): Lead | null {
     fonte: fonte ? String(fonte) : null,
     valor_locacao: parseMoney(valor),
     nome_negocio: nome ? String(nome) : null,
-    created_at: oportunidadeISO ?? undefined,
+    contato: contato ? String(contato) : null,
+    telefone: telefone ? String(telefone) : null,
+    data_criacao: dataCriacao,
+    created_at: dataCriacao ?? oportunidadeISO ?? undefined,
   };
   return lead;
 }
@@ -232,20 +239,22 @@ export function GestaoDados() {
         <h3 className="text-sm font-semibold mb-3 uppercase tracking-wider text-muted-foreground">Mapeamento automático do CRM</h3>
         <p className="text-sm text-muted-foreground mb-4">
           O sistema lê o CSV exportado do CRM e mapeia automaticamente os campos abaixo.
-          A <span className="text-foreground font-medium">data de criação do lead</span> é extraída de
-          <code className="text-primary mx-1">Data e Hora de entrada na fase Oportunidade loc.</code>
-          e usada nos filtros de período e na tendência mensal.
+          A <span className="text-foreground font-medium">data de criação</span> usa a coluna
+          <code className="text-primary mx-1">Criado</code> do CSV, com fallback para a entrada na fase Oportunidade.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
           {[
             ["ID", "id_crm (chave do upsert)"],
             ["Nome do negócio", "nome_negocio"],
+            ["Contato", "contato"],
+            ["Telefone", "telefone"],
+            ["Criado", "data_criacao / created_at"],
             ["Corretor responsável / Responsável", "consultor"],
             ["Fonte", "fonte"],
             ["Fase", "etapa (atual)"],
             ["Preço", "valor_locacao"],
             ["Motivo de Descarte", "motivo_perda"],
-            ["Data … fase Oportunidade loc.", "created_at"],
+            ["Data … fase Oportunidade loc.", "created_at (fallback)"],
             ["Data … fase Perdidos loc.", "status = Perdido"],
             ["Data … cada fase loc.", "deriva etapa mais recente"],
           ].map(([from, to]) => (

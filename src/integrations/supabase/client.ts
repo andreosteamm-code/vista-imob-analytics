@@ -26,6 +26,7 @@ export type Lead = {
   id?: string;
   id_crm: string;
   created_at?: string;
+  data_criacao?: string | null;
   consultor: string | null;
   etapa: EtapaLocacao | string | null;
   status: "Em andamento" | "Locado" | "Perdido" | string | null;
@@ -33,6 +34,8 @@ export type Lead = {
   fonte: string | null;
   valor_locacao: number | null;
   nome_negocio?: string | null;
+  contato?: string | null;
+  telefone?: string | null;
 };
 
 export const TABLE = "leads_locacao";
