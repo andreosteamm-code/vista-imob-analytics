@@ -75,7 +75,12 @@ export function AnalisePerdas() {
                   <Pie data={fontesAgg} dataKey="total" nameKey="fonte" cx="50%" cy="50%" outerRadius={90} innerRadius={50} paddingAngle={2}>
                     {fontesAgg.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
-                  <Tooltip contentStyle={{ backgroundColor: "oklch(0.22 0.02 250)", border: "1px solid oklch(0.3 0.02 250)", borderRadius: 8 }} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: "oklch(0.22 0.02 250)", border: "1px solid oklch(0.3 0.02 250)", borderRadius: 8, color: "oklch(0.95 0.02 250)" }}
+                    itemStyle={{ color: "oklch(0.95 0.02 250)" }}
+                    labelStyle={{ color: "oklch(0.95 0.02 250)" }}
+                  />
+                  <Legend wrapperStyle={{ color: "oklch(0.9 0.02 250)", fontSize: 12 }} />
                 </PieChart>
               </ResponsiveContainer>
             )}
