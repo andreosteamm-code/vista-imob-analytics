@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useFilteredLeads as useLeads } from "@/hooks/useDateFilter";
 import { Card } from "@/components/ui/card";
 import { bySource, fmtInt, fmtPct, lossReasons } from "@/lib/bi-utils";
-import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const COLORS = ["oklch(0.68 0.18 250)", "oklch(0.65 0.22 15)", "oklch(0.78 0.15 75)", "oklch(0.7 0.17 155)", "oklch(0.7 0.17 295)"];
