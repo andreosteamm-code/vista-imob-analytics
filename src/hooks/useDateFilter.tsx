@@ -35,14 +35,18 @@ export function useFilteredLeads() {
   const data = useMemo(() => {
     const leads = query.data ?? [];
     if (!from && !to) return leads;
-    const fromTs = from ? new Date(from + "T00:00:00").getTime() : -Infinity;
-    const toTs = to ? new Date(to + "T23:59:59").getTime() : Infinity;
+    // Bounds fixados no fuso América/São_Paulo (UTC-3, sem horário de verão).
+    // From = 00:00:00.000 -03:00  /  To = 23:59:59.999 -03:00
+    const fromTs = from ? new Date(`${from}T00:00:00.000-03:00`).getTime() : -Infinity;
+    const toTs = to ? new Date(`${to}T23:59:59.999-03:00`).getTime() : Infinity;
     return leads.filter((l: Lead) => {
-      if (!l.created_at) return false;
-      const t = new Date(l.created_at).getTime();
+      const raw = l.created_at ?? l.data_criacao;
+      if (!raw) return false;
+      const t = new Date(raw).getTime();
       if (Number.isNaN(t)) return false;
       return t >= fromTs && t <= toTs;
     });
   }, [query.data, from, to]);
   return { ...query, data };
+
 }
