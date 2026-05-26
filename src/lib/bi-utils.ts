@@ -85,7 +85,8 @@ export function byConsultor(leads: Lead[]) {
     cur.total++;
     if (l.status === "Locado") cur.locados++;
     if (l.status === "Perdido") cur.perdidos++;
-    const r = RANK[l.etapa ?? ""] ?? 0;
+    let r = RANK[l.etapa ?? ""] ?? 0;
+    if (l.status === "Locado") r = FUNIL_ETAPAS.length;
     ETAPAS_CONSULTOR.forEach((stage) => {
       if (r >= RANK[stage]) cur.etapas[stage]++;
     });
