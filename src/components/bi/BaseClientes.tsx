@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
 import { useFilteredLeads as useLeads } from "@/hooks/useDateFilter";
+import { useFonteFilter } from "@/hooks/useFonteFilter";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Phone, User, Search, Mail, Building2, Tag, DollarSign, Calendar, ClipboardList } from "lucide-react";
+import { Phone, User, Search, Mail, Building2, Tag, DollarSign, Calendar, ClipboardList, X } from "lucide-react";
 import type { Lead } from "@/integrations/supabase/client";
 import { fmtInt } from "@/lib/bi-utils";
 
@@ -36,10 +38,14 @@ export function BaseClientes() {
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
   const [sel, setSel] = useState<Lead | null>(null);
+  const { fonte, clear: clearFonte } = useFonteFilter();
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
-    const sorted = [...leads].sort((a, b) => {
+    const base = fonte
+      ? leads.filter((l) => (l.fonte || "Não informado") === fonte)
+      : leads;
+    const sorted = [...base].sort((a, b) => {
       const ta = a.data_criacao || a.created_at || "";
       const tb = b.data_criacao || b.created_at || "";
       return tb.localeCompare(ta);
@@ -50,7 +56,7 @@ export function BaseClientes() {
         .filter(Boolean)
         .some((v) => String(v).toLowerCase().includes(term)),
     );
-  }, [leads, q]);
+  }, [leads, q, fonte]);
 
   return (
     <div className="space-y-6">
