@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
 import { useFilteredLeads as useLeads } from "@/hooks/useDateFilter";
+import { useFonteFilter } from "@/hooks/useFonteFilter";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Phone, User, Search, Mail, Building2, Tag, DollarSign, Calendar, ClipboardList } from "lucide-react";
+import { Phone, User, Search, Mail, Building2, Tag, DollarSign, Calendar, ClipboardList, X } from "lucide-react";
 import type { Lead } from "@/integrations/supabase/client";
 import { fmtInt } from "@/lib/bi-utils";
 
@@ -36,10 +38,14 @@ export function BaseClientes() {
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
   const [sel, setSel] = useState<Lead | null>(null);
+  const { fonte, clear: clearFonte } = useFonteFilter();
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
-    const sorted = [...leads].sort((a, b) => {
+    const base = fonte
+      ? leads.filter((l) => (l.fonte || "Não informado") === fonte)
+      : leads;
+    const sorted = [...base].sort((a, b) => {
       const ta = a.data_criacao || a.created_at || "";
       const tb = b.data_criacao || b.created_at || "";
       return tb.localeCompare(ta);
@@ -50,17 +56,28 @@ export function BaseClientes() {
         .filter(Boolean)
         .some((v) => String(v).toLowerCase().includes(term)),
     );
-  }, [leads, q]);
+  }, [leads, q, fonte]);
 
   return (
     <div className="space-y-6">
       <Card className="p-6 bg-card border-border">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div>
+          <div className="space-y-1">
             <h2 className="text-lg font-semibold">Base de Clientes</h2>
             <p className="text-xs text-muted-foreground">
               {fmtInt(filtered.length)} de {fmtInt(leads.length)} leads · clique em uma linha para ver os detalhes
             </p>
+            {fonte && (
+              <div className="flex items-center gap-2 pt-1">
+                <Badge variant="outline" className="text-[11px] bg-primary/10 text-primary border-primary/30 gap-1.5">
+                  Fonte: {fonte}
+                  <button onClick={clearFonte} className="hover:text-foreground" aria-label="Remover filtro">
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+                <Button variant="ghost" size="sm" onClick={clearFonte} className="h-6 text-xs">Limpar</Button>
+              </div>
+            )}
           </div>
           <div className="relative w-full sm:w-72">
             <Search className="h-3.5 w-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
