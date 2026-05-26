@@ -42,12 +42,14 @@ export function monthlyTrend(leads: Lead[]) {
 }
 
 export function funnelCounts(leads: Lead[]) {
-  // count leads that reached each stage based on ordering in FUNIL_ETAPAS
+  // Contagem CUMULATIVA: um lead na etapa N soma +1 em todas as etapas 1..N.
+  // Leads "Locado" contam como tendo atravessado o funil inteiro.
   const counts: Record<string, number> = Object.fromEntries(
     FUNIL_ETAPAS.map((e) => [e, 0]),
   );
   leads.forEach((l) => {
-    const r = RANK[l.etapa ?? ""] ?? 0;
+    let r = RANK[l.etapa ?? ""] ?? 0;
+    if (l.status === "Locado") r = FUNIL_ETAPAS.length;
     if (!r) return;
     FUNIL_ETAPAS.forEach((stage, idx) => {
       if (r >= idx + 1) counts[stage]++;
