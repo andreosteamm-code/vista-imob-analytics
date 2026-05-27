@@ -26,7 +26,7 @@ const ACCENT = {
 
 function GlassCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <Card className={`glass glass-hover border-0 !bg-transparent p-6 ${className}`}>{children}</Card>
+    <div className={`glass glass-hover rounded-xl p-6 ${className}`}>{children}</div>
   );
 }
 
@@ -256,7 +256,7 @@ function KpiMini({
   accent,
 }: { icon: any; label: string; value: string; sub?: string; accent: string }) {
   return (
-    <Card className="glass glass-hover border-0 !bg-transparent p-5 relative overflow-hidden">
+    <div className="glass glass-hover rounded-xl p-5 relative overflow-hidden">
       <div
         className="absolute -right-6 -top-6 h-20 w-20 rounded-full opacity-20 blur-2xl"
         style={{ background: accent }}
@@ -272,6 +272,6 @@ function KpiMini({
       </div>
       <div className="text-2xl font-semibold tabular-nums">{value}</div>
       {sub && <div className="text-xs text-muted-foreground mt-1">{sub}</div>}
-    </Card>
+    </div>
   );
 }
