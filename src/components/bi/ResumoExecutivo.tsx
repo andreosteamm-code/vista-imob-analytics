@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useFilteredLeads as useLeads } from "@/hooks/useDateFilter";
-import { Card } from "@/components/ui/card";
+
 import { fmtInt, fmtPct, monthlyTrend, pct } from "@/lib/bi-utils";
 import {
   Area,
