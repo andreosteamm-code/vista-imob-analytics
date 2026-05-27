@@ -37,11 +37,12 @@ export function DateRangeFilter() {
     : "Selecionar período";
 
   return (
-    <div className="flex flex-wrap items-center gap-2 p-3 rounded-lg bg-card border border-border">
-      <div className="flex items-center gap-2 text-xs text-muted-foreground pr-2 border-r border-border">
-        <CalendarRange className="h-4 w-4 text-primary" />
-        <span className="font-medium uppercase tracking-wider">Data de criação</span>
+    <div className="glass glass-hover flex flex-wrap items-center gap-2 px-3 py-2 rounded-xl">
+      <div className="flex items-center gap-2 text-[11px] text-muted-foreground pr-2 border-r border-white/10">
+        <CalendarRange className="h-3.5 w-3.5 text-primary" />
+        <span className="font-medium uppercase tracking-wider">Período</span>
       </div>
+
 
       <label className="flex items-center gap-2 text-xs text-muted-foreground">
         De
